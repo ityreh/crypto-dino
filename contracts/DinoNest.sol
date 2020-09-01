@@ -14,9 +14,15 @@ contract DinoNest {
 
     Dino[] public dinos;
 
-    function _hatch(string memory _name, uint256 _dna) private {
+    mapping(uint256 => address) public dinoToOwner;
+    mapping(address => uint256) ownerDinoCount;
+
+    function _hatch(string memory _name, uint256 _dna) internal {
         dinos.push(Dino(_name, _dna));
-        emit DinoBorn(dinos.length - 1, _name, _dna);
+        uint256 id = dinos.length - 1;
+        dinoToOwner[id] = msg.sender;
+        ownerDinoCount[msg.sender]++;
+        emit DinoBorn(id, _name, _dna);
     }
 
     function _mutateDna(string memory _str) private view returns (uint256) {
@@ -25,6 +31,7 @@ contract DinoNest {
     }
 
     function hatchDino(string memory _name) public {
+        require(ownerDinoCount[msg.sender] == 0);
         uint256 randDna = _mutateDna(_name);
         _hatch(_name, randDna);
     }
