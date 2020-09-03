@@ -4,9 +4,25 @@ pragma solidity <=0.7.0 <0.8.0;
 import "./dinofeed.sol";
 
 contract DinoHelper is DinoFeed {
+    uint256 levelUpFee = 0.001 ether;
+
     modifier aboveLevel(uint256 _leve, uint256 _dinoId) {
         require(dinos[_dinoId].level >= _level);
         _;
+    }
+
+    function withdraw() external onlyOwner {
+        address payable _owner = address(uint160(owner()));
+        _owner.transfer(address(this).balance);
+    }
+
+    function setLevelUpFee(uint256 _fee) external onlyOwner {
+        levelUpFee = _fee;
+    }
+
+    function levelUp(uint256 _dinoId) external payable {
+        require(msg.value == lavelUpFee);
+        dinos[_dinoId].level++;
     }
 
     function changeName(uint256 _dinoId, string calldata _newName)
