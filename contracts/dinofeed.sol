@@ -22,16 +22,29 @@ interface KittyInterface {
 }
 
 contract DinoFeed is DinoNest {
-    address ckAddress = 0x06012c8cf97BEaD5deAe237070F9587f8E7A266d;
-    KittyInterface kittyContract = KittyInterface(ckAddress);
+    //address ckAddress = 0x06012c8cf97BEaD5deAe237070F9587f8E7A266d;
+    KittyInterface kittyContract;
+
+    function setKittyAddress(address _address) external onlyOwner {
+        kittyContract = KittyInterface(_address);
+    }
+
+    function _triggerCooldown(Dino storage _dino) internal {
+        _dino.readyTime = uint64(now + cooldownTime);
+    }
+
+    function _isReady(Dino storage _dino) internal view returns (bool) {
+        return (_dino.readyTime <= now);
+    }
 
     function reproduce(
         uint256 _dinoId,
         uint256 _targetDna,
         string memory _species
-    ) public {
+    ) internal {
         require(msg.sender == dinoToOwner[_dinoId]);
         Dino storage dino = dinos[_dinoId];
+        require(_isReady(dino));
         _targetDna = _targetDna % dnaModulus;
         uint256 newDna = (dino.dna + _targetDna) / 2;
         if (
@@ -41,6 +54,7 @@ contract DinoFeed is DinoNest {
             newDna = newDna - (newDna % 100) + 99;
         }
         _hatch("NoName", newDna);
+        _triggerCooldown(dino);
     }
 
     function feedOnKitty(uint256 _dinoId, uint256 _kittyId) public {
