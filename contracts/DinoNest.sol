@@ -16,6 +16,8 @@ contract DinoNest is Ownable {
         uint32 level;
         // uint64 because of 2038 problem
         uint64 readyTime;
+        uint16 winCount;
+        uint16 lossCount;
     }
 
     Dino[] public dinos;
@@ -24,7 +26,7 @@ contract DinoNest is Ownable {
     mapping(address => uint256) ownerDinoCount;
 
     function _hatch(string memory _name, uint256 _dna) internal {
-        dinos.push(Dino(_name, _dna, 1, uint64(now + cooldownTime)));
+        dinos.push(Dino(_name, _dna, 1, uint64(now + cooldownTime), 0, 0));
         uint256 id = dinos.length - 1;
         dinoToOwner[id] = msg.sender;
         ownerDinoCount[msg.sender]++;

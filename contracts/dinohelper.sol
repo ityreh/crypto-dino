@@ -28,16 +28,16 @@ contract DinoHelper is DinoFeed {
     function changeName(uint256 _dinoId, string calldata _newName)
         external
         aboveLevel(2, _dinoId)
+        ownerOf(_dinoId)
     {
-        require(msg.sender == dinoToOwner[_dinoId]);
         dinos[_dinoId].name = _newName;
     }
 
     function changeDna(uint256 _dinoId, uint256 _newDna)
         external
         aboveLevel(20, _dinoId)
+        ownerOf(_dinoId)
     {
-        require(msg.sender == dinoToOwner[_dinoId]);
         dinos[_dinoId].dna = _newDna;
     }
 

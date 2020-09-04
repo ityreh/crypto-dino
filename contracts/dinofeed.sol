@@ -25,6 +25,11 @@ contract DinoFeed is DinoNest {
     //address ckAddress = 0x06012c8cf97BEaD5deAe237070F9587f8E7A266d;
     KittyInterface kittyContract;
 
+    modifier ownerOf(uint256 _zombieId) {
+        require(msg.sender == zombieToOwner[_zombieId]);
+        _;
+    }
+
     function setKittyAddress(address _address) external onlyOwner {
         kittyContract = KittyInterface(_address);
     }
@@ -41,8 +46,7 @@ contract DinoFeed is DinoNest {
         uint256 _dinoId,
         uint256 _targetDna,
         string memory _species
-    ) internal {
-        require(msg.sender == dinoToOwner[_dinoId]);
+    ) internal ownerOf(_dinoId) {
         Dino storage dino = dinos[_dinoId];
         require(_isReady(dino));
         _targetDna = _targetDna % dnaModulus;
