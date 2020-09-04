@@ -8,7 +8,7 @@ contract DinoAttack is DinoHelper {
     uint256 attackVictoryProbability = 70;
 
     function randMod(uint256 _modulus) internal returns (uint256) {
-        randNonce++;
+        randNonce = randNonce.add(1);
         return
             uint256(keccak256(abi.encodePacked(now, msg.sender, randNonce))) %
             _modulus;
@@ -22,13 +22,13 @@ contract DinoAttack is DinoHelper {
         Dino storage enemyDino = dinos[_targetId];
         uint256 rand = randMod(100);
         if (rand <= attackVictoryProbability) {
-            myDino.level++;
-            myDino.winCount++;
-            enemyDino.lossCount++;
+            myDino.level = myDino.level.add(1);
+            myDino.winCount = myDino.winCount.add(1);
+            enemyDino.lossCount = enemyDino.lossCount.add(1);
             reproduce(_zombieId, enemyDino.dna, "dino");
         } else {
-            myDino.lossCount++;
-            enemyDino.winCount++;
+            myDino.lossCount = myDino.lossCount.add(1);
+            enemyDino.winCount = enemyDino.winCount.add(1);
             _triggerCooldown(myDino);
         }
     }

@@ -41,7 +41,7 @@ contract DinoOwnership is DinoAttack, ERC721 {
         uint256 _tokenId
     ) {
         ownerDinoCount[_from]--;
-        ownerDinoCount[_to]++;
+        ownerDinoCount[_to] = ownerDinoCount[_to].add(1);
         dinoToOwner[_tokenId] = _to;
         emit Transfer(_from, _to, _tokenId);
     }

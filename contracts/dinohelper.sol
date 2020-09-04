@@ -22,7 +22,7 @@ contract DinoHelper is DinoFeed {
 
     function levelUp(uint256 _dinoId) external payable {
         require(msg.value == lavelUpFee);
-        dinos[_dinoId].level++;
+        dinos[_dinoId].level = dinos[_dinoId].level.add(1);
     }
 
     function changeName(uint256 _dinoId, string calldata _newName)

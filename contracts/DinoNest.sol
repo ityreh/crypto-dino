@@ -2,8 +2,13 @@
 pragma solidity >=0.7.0 <0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 
 contract DinoNest is Ownable {
+    using SafeMath for uint256;
+    using SafeMath32 for uint32;
+    using SafeMath16 for uint16;
+
     event DinoBorn(uint256 dinoId, string name, uint256 dna);
 
     uint256 dnaDigits = 16;
@@ -29,7 +34,7 @@ contract DinoNest is Ownable {
         dinos.push(Dino(_name, _dna, 1, uint64(now + cooldownTime), 0, 0));
         uint256 id = dinos.length - 1;
         dinoToOwner[id] = msg.sender;
-        ownerDinoCount[msg.sender]++;
+        ownerDinoCount[msg.sender] = ownerDinoCount[msg.sender].add(1);
         emit DinoBorn(id, _name, _dna);
     }
 
