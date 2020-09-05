@@ -3,6 +3,9 @@ pragma solidity <=0.7.0 <0.8.0;
 import "./dinoattack.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
+/// @title A contract that manages transfering dinos ownership
+/// @author Yannick Rehberger
+/// @dev Compliant with OpenZeppelin's implementation of the ERC721 spec draft
 contract DinoOwnership is DinoAttack, ERC721 {
     mapping(uint256 => address) dinoApprovals;
 
